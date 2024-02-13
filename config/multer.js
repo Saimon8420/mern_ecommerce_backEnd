@@ -1,7 +1,5 @@
 const multer = require('multer');
 const path = require("path");
-const sizeOf = require('image-size');
-const fs = require('fs');
 
 module.exports = multer({
     storage: multer.diskStorage({}),

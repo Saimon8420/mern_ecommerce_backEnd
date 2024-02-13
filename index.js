@@ -2,8 +2,6 @@ const express = require('express');
 const app = express();
 require("dotenv").config();
 const cors = require("cors");
-const upload = require('./config/multer');
-const cloudinary = require("./config/cloudinary");
 const { dbConnect } = require('./config/dbconfig');
 const productRouter = require('./router/productRoute');
 const userRouter = require('./router/userRoute');
@@ -11,6 +9,7 @@ const orderRouter = require('./router/orderRoute');
 const reviewRouter = require('./router/reviewRoute');
 const adminRouter = require('./router/adminRoute');
 const bannerRouter = require('./router/bannerRoute');
+const categoryRouter = require('./router/categoryRoute');
 const port = process.env.PORT || 9001;
 
 app.use(express.urlencoded({ extended: true }));
@@ -27,25 +26,7 @@ app.use("/order", orderRouter);
 app.use("/review", reviewRouter);
 app.use("/admin", adminRouter);
 app.use("/banner", bannerRouter);
-
-app.post("/images", upload.single("image"), async (req, res) => {
-    try {
-        const image = req.file;
-        const imageUpload = await cloudinary.v2.uploader.upload(image?.path, {
-            folder: 'MERN_Ecommerce',
-            resource_type: 'image',
-            transformation: [
-                { height: 350, width: 300, crop: "fill" },
-            ]
-        },
-        )
-        res.send(imageUpload);
-
-    } catch (error) {
-        console.log(error);
-    }
-
-})
+app.use("/category", categoryRouter);
 
 app.listen(port, () => {
     console.log(`Listening to the port ${port}`);
