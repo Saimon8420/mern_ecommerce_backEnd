@@ -1,14 +1,6 @@
 const cloudinary = require("../../config/cloudinary");
 const ImageModel = require("../../model/imageModel");
 
-const getImages = (req, res, next) => {
-    try {
-
-    } catch (error) {
-        console.log(error.message);
-    }
-}
-
 const addImage = async (req, res, next) => {
     try {
         const images = await req.files;
@@ -46,23 +38,15 @@ const addImage = async (req, res, next) => {
     }
 }
 
-const editImage = (req, res, next) => {
-    try {
-
-    } catch (error) {
-        console.log(error.message);
-    }
-}
-
 const deleteImage = async (req, res, next) => {
-    try {
-        const { public_id } = req.body;
-        const imageData = await cloudinary.v2.api.delete_resources([public_id], { type: 'upload', resource_type: 'image' });
-        req.body.imageDeleted = imageData;
-    } catch (error) {
-        console.log(error.message);
-    }
-    next();
+    // try {
+    //     const { public_id } = req.body;
+    //     const imageData = await cloudinary.v2.api.delete_resources([public_id], { type: 'upload', resource_type: 'image' });
+    //     req.body.imageDeleted = imageData;
+    // } catch (error) {
+    //     console.log(error.message);
+    // }
+    // next();
 }
 
-module.exports = { getImages, addImage, editImage, deleteImage }
+module.exports = { addImage, deleteImage }

@@ -20,11 +20,13 @@ const productSchema = new Schema({
         required: true,
     },
     category: {
-        type: String,
-        // require,
+        type: ObjectId,
+        ref: "Category",
+        require,
     },
     sizes: {
         type: Array,
+        default: null,
     },
     inStock: {
         type: Boolean,
@@ -36,6 +38,7 @@ const productSchema = new Schema({
     },
     newPrice: {
         type: Number,
+        default: null,
     },
     image: [{
         type: ObjectId,

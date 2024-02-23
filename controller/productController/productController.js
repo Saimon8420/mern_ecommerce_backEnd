@@ -1,12 +1,30 @@
 const ProductModel = require("../../model/productModel");
 
+const getEachProduct = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const getProducts = await ProductModel.findOne({ _id: id }).populate({
+            path: "image", // from product schema
+            select: "secure_url public_id",
+        }).populate({
+            path: "category", // from category schema
+            select: "title",
+        }).select("-createdAt -updatedAt");
+        res.send({ status: 201, data: getProducts });
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
 const getAllProduct = async (req, res) => {
     try {
         const getProducts = await ProductModel.find({}).populate({
             path: "image", // from product schema
-            select: "_id secure_url public_id",
+            select: "secure_url public_id",
+        }).populate({
+            path: "category", // from category schema
+            select: "title",
         }).select("-createdAt -updatedAt");
-        console.log(getProducts);
         res.send({ status: 201, data: getProducts });
 
     } catch (error) {
@@ -16,12 +34,11 @@ const getAllProduct = async (req, res) => {
 
 const addProduct = async (req, res) => {
     try {
-        const { title, description, price, inStock, onSale, sizes } = req.body;
-
+        const { title, description, price, inStock, onSale, sizes, category } = req.body;
         const { imageData } = req.body;
 
         const addedProduct = await new ProductModel({
-            title, description, price, sizes, inStock, onSale, image: imageData
+            title, description, price, sizes, inStock, onSale, image: imageData, category
         })
         await addedProduct.save();
 
@@ -50,4 +67,4 @@ const deleteProduct = async (req, res) => {
     }
 }
 
-module.exports = { getAllProduct, addProduct, updateProduct, deleteProduct }
+module.exports = { getAllProduct, addProduct, updateProduct, deleteProduct, getEachProduct }

@@ -4,7 +4,7 @@ const categoryRouter = express.Router();
 
 categoryRouter.get("/all", async (req, res) => {
     try {
-        const getCategories = await CategoryModel.find({});
+        const getCategories = await CategoryModel.find({}).select("_id title");
         res.send({ status: 201, data: getCategories });
     } catch (error) {
         console.log(error.message);
