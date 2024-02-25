@@ -28,7 +28,6 @@ categoryRouter.post("/add", async (req, res) => {
 categoryRouter.put("/update", async (req, res) => {
     try {
         const { id, title } = req.body;
-        console.log(id, title);
         const findQuery = { _id: id };
         const updateCategory = await CategoryModel.findOneAndUpdate(findQuery, { title });
 

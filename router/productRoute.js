@@ -1,4 +1,4 @@
-const { addImage, deleteImage } = require("../controller/imageController/imageController");
+const { addImage, deleteImage, updateImage } = require("../controller/imageController/imageController");
 const { getAllProduct, addProduct, updateProduct, deleteProduct, getEachProduct } = require("../controller/productController/productController");
 
 const upload = require("../config/multer");
@@ -14,10 +14,10 @@ productRouter.get("/:id", getEachProduct);
 
 productRouter.post("/addProduct", upload.array("images"), addImage, addProduct);
 
-productRouter.put("/updateProduct/:id", deleteImage, updateProduct);
+productRouter.put("/updateProduct/:id", upload.array("images"), updateImage, updateProduct);
 
 // productRouter.delete("/deleteProduct/:id", deleteProduct);
 
-productRouter.delete("/deleteProduct/", deleteImage);
+productRouter.delete("/removeImages", deleteImage);
 
 module.exports = productRouter;

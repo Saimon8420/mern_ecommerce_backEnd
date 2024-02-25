@@ -38,15 +38,49 @@ const addImage = async (req, res, next) => {
     }
 }
 
-const deleteImage = async (req, res, next) => {
-    // try {
-    //     const { public_id } = req.body;
-    //     const imageData = await cloudinary.v2.api.delete_resources([public_id], { type: 'upload', resource_type: 'image' });
-    //     req.body.imageDeleted = imageData;
-    // } catch (error) {
-    //     console.log(error.message);
-    // }
-    // next();
+const deleteImage = async (req, res) => {
+    try {
+        const { public_id, _id } = req.body[0];
+        const imageData = await cloudinary.v2.api.delete_resources([public_id], { type: 'upload', resource_type: 'image' });
+        const deleteImage = await ImageModel.findByIdAndUpdate({ _id }, { secure_url: "", public_id: "" });
+
+        res.send({ status: 201, msg: "image removed successfully", data: { imageData, deleteImage } })
+    } catch (error) {
+        console.log(error.message);
+    }
+};
+
+const updateImage = async (req, res, next) => {
+    try {
+        const images = await req.files;
+        const id = req.body.storedId;
+        if (images?.length !== 0) {
+            // Map each image upload operation to its respective Cloudinary response
+            const imageUpload = images.map(async (each, index) => {
+                const cloudinaryResponse = await cloudinary.v2.uploader.upload(each.path, {
+                    folder: 'MERN_Ecommerce',
+                    resource_type: 'image',
+                    transformation: [
+                        { height: 350, width: 300, crop: "fill" },
+                    ]
+                });
+                // Update the corresponding document in ImageModel based on the ID
+                await ImageModel.findByIdAndUpdate(id[index], {
+                    secure_url: cloudinaryResponse.secure_url,
+                    public_id: cloudinaryResponse.public_id
+                });
+            });
+            // Wait for all image upload operations to complete
+            await Promise.all(imageUpload);
+            next();
+        }
+        else {
+            next();
+        }
+    } catch (error) {
+        console.log(error.message);
+        res.send({ status: 501, msg: error.message });
+    }
 }
 
-module.exports = { addImage, deleteImage }
+module.exports = { addImage, deleteImage, updateImage }

@@ -14,6 +14,8 @@ const port = process.env.PORT || 9001;
 
 app.use(express.urlencoded({ extended: true }));
 
+app.use(express.json());
+
 app.use(cors());
 
 app.get("/", (req, res) => {

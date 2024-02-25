@@ -26,7 +26,7 @@ const productSchema = new Schema({
     },
     sizes: {
         type: Array,
-        default: null,
+        default: [],
     },
     inStock: {
         type: Boolean,
@@ -38,7 +38,7 @@ const productSchema = new Schema({
     },
     newPrice: {
         type: Number,
-        default: null,
+        default: 0,
     },
     image: [{
         type: ObjectId,

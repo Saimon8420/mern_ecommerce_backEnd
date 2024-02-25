@@ -52,6 +52,14 @@ const addProduct = async (req, res) => {
 
 const updateProduct = async (req, res) => {
     try {
+        const { id } = req.params;
+        const { title, description, category, inStock, newPrice, onSale, price, sizes } = req.body;
+
+        // console.log(title, description, category, inStock, newPrice, onSale, price, sizes);
+        const findQuery = { _id: id };
+        const updateData = await ProductModel.findOneAndUpdate(findQuery, { title, description, category, inStock, newPrice, onSale, price, sizes });
+
+        res.send({ status: 201, msg: "product updated successfully", data: updateData });
 
     } catch (error) {
         console.log(error.message);
